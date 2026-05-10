@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { DATA } from "@/data/resume";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -19,60 +19,145 @@ const NAV_ITEMS = [
 
 export default function Sidebar() {
   const [activeSection, setActiveSection] = useState("about");
+  const isClickScrolling = useRef(false);
+  const clickTimeout = useRef<NodeJS.Timeout | null>(null);
 
-  const handleObserver = useCallback((entries: IntersectionObserverEntry[]) => {
-    const visible = entries
-      .filter((e) => e.isIntersecting)
-      .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-    if (visible.length > 0) {
-      setActiveSection(visible[0].target.id);
+  // Scroll-position-based active section detection
+  const updateActiveSection = useCallback(() => {
+    if (isClickScrolling.current) return;
+
+    const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
+    const container = isDesktop
+      ? document.getElementById("main-content")
+      : null;
+
+    const scrollTop = container ? container.scrollTop : window.scrollY;
+    // Offset: how far from the top of the scroll container a section must be to count as "active"
+    const offset = isDesktop ? 120 : 100;
+
+    let current = "about";
+
+    for (const item of NAV_ITEMS) {
+      const id = item.href.slice(1);
+      const el = document.getElementById(id);
+      if (!el) continue;
+
+      // Get element position relative to the scroll container
+      let elTop: number;
+      if (container) {
+        elTop = el.offsetTop - container.offsetTop;
+      } else {
+        elTop = el.getBoundingClientRect().top + window.scrollY;
+      }
+
+      if (scrollTop >= elTop - offset) {
+        current = id;
+      }
     }
+
+    setActiveSection(current);
   }, []);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(handleObserver, {
-      root: document.getElementById("main-content"),
-      rootMargin: "-10% 0px -60% 0px",
-      threshold: [0, 0.1, 0.2, 0.3, 0.5],
-    });
+    const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
+    const container = isDesktop
+      ? document.getElementById("main-content")
+      : null;
+    const scrollTarget = container || window;
 
-    const sectionIds = NAV_ITEMS.map((item) => item.href.slice(1));
-    const elements = sectionIds
-      .map((id) => document.getElementById(id))
-      .filter(Boolean) as HTMLElement[];
+    // Throttled scroll handler using rAF
+    let ticking = false;
+    const onScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          updateActiveSection();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
 
-    elements.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-  }, [handleObserver]);
+    scrollTarget.addEventListener("scroll", onScroll, { passive: true });
 
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    // Initial check
+    updateActiveSection();
+
+    // Re-init on resize/orientation change
+    const mediaQuery = window.matchMedia("(min-width: 1024px)");
+    const handleMediaChange = () => {
+      // Clean up old listener
+      scrollTarget.removeEventListener("scroll", onScroll);
+      // The effect will re-run due to the dependency, but we also need to handle
+      // the case where the scroll target changes
+      const newIsDesktop = mediaQuery.matches;
+      const newContainer = newIsDesktop
+        ? document.getElementById("main-content")
+        : null;
+      const newScrollTarget = newContainer || window;
+      newScrollTarget.addEventListener("scroll", onScroll, { passive: true });
+      updateActiveSection();
+    };
+
+    mediaQuery.addEventListener("change", handleMediaChange);
+
+    return () => {
+      scrollTarget.removeEventListener("scroll", onScroll);
+      mediaQuery.removeEventListener("change", handleMediaChange);
+    };
+  }, [updateActiveSection]);
+
+  const handleNavClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    href: string
+  ) => {
     e.preventDefault();
     const id = href.slice(1);
     const el = document.getElementById(id);
-    const container = document.getElementById("main-content");
-    if (el && container) {
-      const top = el.offsetTop - 24;
+    const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
+    const container = isDesktop
+      ? document.getElementById("main-content")
+      : null;
+
+    if (!el) return;
+
+    // Prevent scroll handler from fighting with the click
+    isClickScrolling.current = true;
+    setActiveSection(id);
+
+    if (container) {
+      const top = el.offsetTop - container.offsetTop - 24;
       container.scrollTo({ top, behavior: "smooth" });
+    } else {
+      const top =
+        el.getBoundingClientRect().top + window.scrollY - 80; // navbar height offset
+      window.scrollTo({ top, behavior: "smooth" });
     }
+
+    // Re-enable scroll tracking after animation completes
+    if (clickTimeout.current) clearTimeout(clickTimeout.current);
+    clickTimeout.current = setTimeout(() => {
+      isClickScrolling.current = false;
+      updateActiveSection();
+    }, 800);
   };
 
   return (
-    <aside className="w-full lg:w-[420px] lg:shrink-0 lg:sticky lg:top-[calc(var(--navbar-height,80px))] lg:h-[calc(100vh-var(--navbar-height,80px))] flex flex-col justify-between px-6 py-10 lg:px-10 lg:py-12 lg:border-r lg:border-border/40">
+    <aside className="sidebar-aside w-full lg:w-[420px] lg:shrink-0 lg:sticky lg:top-[var(--navbar-height,56px)] lg:h-[calc(100vh-var(--navbar-height,56px))] flex flex-col justify-between px-4 sm:px-6 py-6 sm:py-8 lg:px-10 lg:py-12 lg:border-r lg:border-border/40">
       {/* Top: Profile */}
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-4 sm:gap-6">
         {/* Panda + Name */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3 sm:gap-4">
           <img
             src={DATA.avatarUrl}
             alt={DATA.name}
-            className="w-20 h-20 lg:w-24 lg:h-24 shrink-0 rounded-full object-cover ring-2 ring-border shadow-lg"
+            className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 shrink-0 rounded-full object-cover ring-2 ring-border shadow-lg"
           />
-          <div className="flex flex-col gap-1">
-            <h1 className="text-2xl lg:text-3xl font-semibold tracking-tight">
+          <div className="flex flex-col gap-0.5 sm:gap-1">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-semibold tracking-tight">
               {DATA.name}
             </h1>
             <span
-              className="font-mono text-sm text-muted-foreground/80"
+              className="font-mono text-xs sm:text-sm text-muted-foreground/80"
               style={{ color: "#6c63ff" }}
             >
               @{DATA.gamerTag}
@@ -81,12 +166,15 @@ export default function Sidebar() {
         </div>
 
         {/* Tagline */}
-        <p className="text-muted-foreground text-sm lg:text-base leading-relaxed max-w-[320px]">
+        <p className="text-muted-foreground text-xs sm:text-sm lg:text-base leading-relaxed max-w-[320px]">
           {DATA.description}
         </p>
 
         {/* Navigation — desktop only */}
-        <nav className="hidden lg:flex flex-col gap-1 mt-4" aria-label="Section navigation">
+        <nav
+          className="hidden lg:flex flex-col gap-1 mt-4"
+          aria-label="Section navigation"
+        >
           {NAV_ITEMS.map((item) => {
             const sectionId = item.href.slice(1);
             const isActive = activeSection === sectionId;
@@ -105,7 +193,9 @@ export default function Sidebar() {
                 <span
                   className={cn(
                     "h-px bg-foreground transition-all duration-300",
-                    isActive ? "w-16" : "w-8 group-hover:w-12 bg-muted-foreground group-hover:bg-foreground"
+                    isActive
+                      ? "w-16"
+                      : "w-8 group-hover:w-12 bg-muted-foreground group-hover:bg-foreground"
                   )}
                 />
                 <span>{item.label}</span>
@@ -116,7 +206,7 @@ export default function Sidebar() {
       </div>
 
       {/* Bottom: Social links */}
-      <div className="flex items-center gap-4 mt-8 lg:mt-0">
+      <div className="flex items-center gap-3 sm:gap-4 mt-4 sm:mt-6 lg:mt-0">
         {Object.entries(DATA.contact.social)
           .filter(([_, social]) => social.navbar)
           .map(([name, social]) => {

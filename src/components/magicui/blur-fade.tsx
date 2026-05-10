@@ -21,17 +21,17 @@ const BlurFade = ({
   children,
   className,
   variant,
-  duration = 0.4,
+  duration = 0.3,
   delay = 0,
-  yOffset = 6,
+  yOffset = 4,
   inView = false,
   inViewMargin = "-50px",
-  blur = "6px",
+  blur = "4px",
 }: BlurFadeProps) => {
   const ref = useRef(null);
   const inViewResult = useInView(ref, {
     once: true,
-    ...(inViewMargin ? { margin: inViewMargin as any } : {})
+    ...(inViewMargin ? { margin: inViewMargin as any } : {}),
   });
   const isInView = !inView || inViewResult;
   const defaultVariants: Variants = {
@@ -39,6 +39,10 @@ const BlurFade = ({
     visible: { y: 0, opacity: 1, filter: `blur(0px)` },
   };
   const combinedVariants = variant || defaultVariants;
+
+  // Cap delay to prevent very long waits when scrolling fast
+  const cappedDelay = Math.min(0.04 + delay, 0.6);
+
   return (
     <AnimatePresence>
       <motion.div
@@ -48,7 +52,7 @@ const BlurFade = ({
         exit="hidden"
         variants={combinedVariants}
         transition={{
-          delay: 0.04 + delay,
+          delay: cappedDelay,
           duration,
           ease: "easeOut",
         }}
