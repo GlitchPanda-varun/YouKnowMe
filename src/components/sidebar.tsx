@@ -5,6 +5,8 @@ import { useEffect, useState, useCallback, useRef } from "react";
 import { DATA } from "@/data/resume";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { useTheme } from "next-themes";
+import { PixelImage } from "@/components/ui/pixel-image";
 
 const NAV_ITEMS = [
   { label: "About", href: "#about" },
@@ -19,8 +21,12 @@ const NAV_ITEMS = [
 
 export default function Sidebar() {
   const [activeSection, setActiveSection] = useState("about");
+  const { resolvedTheme } = useTheme();
   const isClickScrolling = useRef(false);
   const clickTimeout = useRef<NodeJS.Timeout | null>(null);
+
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   // Scroll-position-based active section detection
   const updateActiveSection = useCallback(() => {
@@ -146,18 +152,24 @@ export default function Sidebar() {
       {/* Top: Profile */}
       <div className="flex flex-col gap-4 sm:gap-6">
         {/* Panda + Name */}
-        <div className="flex items-center gap-3 sm:gap-4">
-          <img
-            src={DATA.avatarUrl}
-            alt={DATA.name}
-            className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 shrink-0 rounded-full object-cover ring-2 ring-border shadow-lg"
-          />
-          <div className="flex flex-col gap-0.5 sm:gap-1">
-            <h1 className="text-xl sm:text-2xl lg:text-3xl font-semibold tracking-tight">
+        <div className="flex items-center gap-4 sm:gap-5">
+          {mounted ? (
+            <PixelImage
+              key={resolvedTheme}
+              src={resolvedTheme === "dark" && DATA.avatarUrlDark ? DATA.avatarUrlDark : DATA.avatarUrl}
+              customGrid={{ rows: 8, cols: 8 }}
+              className="w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 shrink-0 rounded-full overflow-hidden ring-2 ring-border shadow-lg"
+              grayscaleAnimation
+            />
+          ) : (
+            <div className="w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 shrink-0 rounded-full overflow-hidden ring-2 ring-border shadow-lg bg-muted" />
+          )}
+          <div className="flex flex-col gap-1 sm:gap-1.5">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-tight">
               {DATA.name}
             </h1>
             <span
-              className="font-mono text-xs sm:text-sm text-muted-foreground/80"
+              className="font-mono text-sm sm:text-base text-muted-foreground/80"
               style={{ color: "#6c63ff" }}
             >
               @{DATA.gamerTag}

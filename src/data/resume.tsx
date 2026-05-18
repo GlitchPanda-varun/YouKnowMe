@@ -12,7 +12,8 @@ export const DATA = {
     "Building at the intersection of tech and management",
   summary:
     "I'm a developer and builder with a strong foundation in computer science, competitive programming, and full-stack web development. I'm deeply interested in **product thinking** and **tech management** — understanding not just *how* to build, but *what* to build and *why*. When I'm not coding, you'll find me grinding on [Codeforces](https://codeforces.com), exploring business strategy, or working on side projects that solve real problems.",
-  avatarUrl: "/images/me.png",
+  avatarUrl: "/images/me2.png",
+  avatarUrlDark: "/images/me.png", // TODO: Replace this with your dark theme image path in the public/images folder
   skills: [
     { name: "C++", icon: "c++" },
     { name: "Python", icon: "python" },
