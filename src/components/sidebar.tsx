@@ -9,11 +9,11 @@ import Link from "next/link";
 const NAV_ITEMS = [
   { label: "About", href: "#about" },
   { label: "Skills", href: "#skills" },
-  { label: "Experience", href: "#work" },
-  { label: "Projects", href: "#projects" },
   { label: "Education", href: "#education" },
+  { label: "Responsibility", href: "#work" },
+  { label: "Projects", href: "#projects" },
+  { label: "Experiences", href: "#hackathons" },
   { label: "Interests", href: "#interests" },
-  { label: "Events", href: "#hackathons" },
   { label: "Contact", href: "#contact" },
 ];
 
@@ -142,7 +142,7 @@ export default function Sidebar() {
   };
 
   return (
-    <aside className="sidebar-aside w-full lg:w-[420px] lg:shrink-0 lg:sticky lg:top-[var(--navbar-height,56px)] lg:h-[calc(100vh-var(--navbar-height,56px))] flex flex-col justify-between px-4 sm:px-6 py-6 sm:py-8 lg:px-10 lg:py-12 lg:border-r lg:border-border/40">
+    <aside className="sidebar-aside w-full lg:w-[420px] lg:shrink-0 lg:sticky lg:top-[var(--navbar-height,56px)] lg:h-[calc(100vh-var(--navbar-height,56px))] flex flex-col justify-between px-4 sm:px-6 py-6 sm:py-8 lg:px-10 lg:py-12 lg:border-r lg:border-border/40 lg:overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
       {/* Top: Profile */}
       <div className="flex flex-col gap-4 sm:gap-6">
         {/* Panda + Name */}
@@ -206,7 +206,7 @@ export default function Sidebar() {
       </div>
 
       {/* Bottom: Social links */}
-      <div className="flex items-center gap-3 sm:gap-4 mt-4 sm:mt-6 lg:mt-0">
+      {/* <div className="flex items-center gap-3 sm:gap-4 mt-4 sm:mt-6 lg:mt-0">
         {Object.entries(DATA.contact.social)
           .filter(([_, social]) => social.navbar)
           .map(([name, social]) => {
@@ -224,7 +224,7 @@ export default function Sidebar() {
               </Link>
             );
           })}
-      </div>
+      </div> */}
     </aside>
   );
 }
