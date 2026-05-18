@@ -38,7 +38,7 @@ export default function Navbar() {
       className="sticky top-0 inset-x-0 z-50 flex justify-center py-2 sm:py-3 bg-background/80 backdrop-blur-md border-b border-border/40"
     >
       <Dock
-        className="z-50 pointer-events-auto relative h-10 sm:h-14 p-1 sm:p-2 w-fit max-w-[calc(100vw-1.5rem)] mx-auto flex gap-1 sm:gap-2 border bg-card/90 backdrop-blur-xl shadow-[0_0_10px_3px] shadow-primary/5 overflow-x-auto overflow-y-hidden"
+        className="z-50 pointer-events-auto relative h-14 sm:h-16 p-2 w-fit max-w-[calc(100vw-1.5rem)] mx-auto flex items-center gap-1 sm:gap-2 border bg-card/90 backdrop-blur-xl shadow-[0_0_10px_3px] shadow-primary/5 overflow-x-auto overflow-y-hidden"
         magnification={mounted && window?.innerWidth >= 1024 ? 60 : 44}
         distance={mounted && window?.innerWidth >= 1024 ? 100 : 60}
       >
