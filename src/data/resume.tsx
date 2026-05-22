@@ -4,6 +4,7 @@ import { HomeIcon, NotebookIcon, FolderKanbanIcon, UserIcon } from "lucide-react
 export const DATA = {
   name: "Varun Pandey",
   gamerTag: "GlitchPanda",
+  gamerTagLight: "Gen AI Developer",
   initials: "VP",
   url: "https://varunpandey.dev",
   location: "India",
@@ -109,7 +110,7 @@ export const DATA = {
       start: "May,2025",
       end: "Present",
       description:
-        "Leading the technical team, organizing workshops, mentoring juniors in web development and competitive programming. [PLACEHOLDER — update with real details]",
+        "As the President of the RESO Club, I am responsible for leading and mentoring a team of dedicated developers, fostering a culture of innovation and technical excellence. My role involves overseeing the planning and execution of various coding events, hackathons, and workshops, ensuring that members receive valuable learning opportunities and exposure to industry best practices. Additionally, I focus on building strong industry connections and driving collaborations that enhance our club’s reach and impact.",
     },
     {
       company: "Jabrod AI",
@@ -121,7 +122,7 @@ export const DATA = {
       start: "Jan, 2026",
       end: "Present",
       description:
-        "Contributed to event planning, content creation, and community building. Helped organize tech talks and coding contests. [PLACEHOLDER — update with real details]",
+        "Jabrod is an AI workspace for developers to build RAG pipelines, intelligent agents, and production-ready AI workflows. As a Co-Founder and Operations Lead at Jabrod AI, I oversee the company's daily operations and ensure seamless project execution. I am responsible for managing the company's resources, coordinating with our team, and ensuring that we deliver high-quality AI solutions to our clients.",
     },
     {
       company: "ICMR AI-RAG Chatbot Project",
@@ -131,9 +132,9 @@ export const DATA = {
       title: "Project Lead",
       logoUrl: "/images/icmrlogo.jpg",
       start: "2026",
-      end: "202",
+      end: "Present",
       description:
-        "Coordinated logistics and execution for the annual tech fest. Managed a team of volunteers and ensured smooth event delivery. [PLACEHOLDER — update with real details]",
+        "Leading a team of developers in creating an AI-powered RAG chatbot for ICMR, designed to combat malnutrition by leveraging local health data and resources.",
     },
   ],
   education: [
@@ -165,7 +166,7 @@ export const DATA = {
   projects: [
     
     {
-      title: "ICMR AI-RAG Chatbot Project",
+      title: "ICMR AI-RAG Chatbot APP",
       href: "#",
       dates: "2026",
       active: true,
@@ -180,7 +181,7 @@ export const DATA = {
       links: [
         {
           type: "Website",
-          href: "#",
+          href: "https://github.com/GlitchPanda-varun/IMCR-Chatbot",
           icon: <Icons.globe className="size-3" />,
         },
         {
@@ -194,14 +195,17 @@ export const DATA = {
     },
     {
       title: "Mini-RAG Chatbot",
-      href: "https://mmmut.xyz",
+      href: "https://varuns-minirag.vercel.app/",
       dates: "2026",
       active: true,
       description:
-        "A university resource and utility website for MMMUT students. Access notes, previous year papers, faculty info, and other academic tools — all in one place, built by students for students.",
+        "A Retrieval-Augmented Generation (RAG) application built with Next.js, using: Google Cloud Storage (GCS) for file storage, Upstash Vector for vector database, Google Gemini for embeddings and LLM (free tier) Cohere for reranking (free tier)",
       technologies: [
         "Next.js",
-        "React",
+        "Google Cloud Storage (GCS)",
+        "Upstash Vector",
+        "Google Gemini",
+        "Cohere",
         "TailwindCSS",
         "TypeScript",
       ],
@@ -222,31 +226,36 @@ export const DATA = {
     },
     
     {
-      title: "Campus Connect",
-      href: "#",
+      title: "Sentiment-Analysis Project",
+      href: "https://senti-men.streamlit.app",
       dates: "2026",
       active: true,
       description:
-        "A social media app for students to connect with each other.",
+        "A hybrid NLP engine combining rule-based heuristics and a trained TF-IDF + ML classifier to predict review sentiment.",
       technologies: [
 
-        "React Native",
-        "TailwindCSS",
-        "TypeScript",
+            "Streamlit",
+            "scikit-learn classifier",
+            "TF-IDF Vectorizer",
+            "NLTK",
+            "re(regex)",
+            "Plotly",
+            "Pandas",
+        
       ],
       links: [
         {
           type: "Website",
-          href: "#",
+          href: "https://senti-men.streamlit.app",
           icon: <Icons.globe className="size-3" />,
         },
         {
-          type: "Source-Private",
-          href: "https://github.com/GlitchPanda-varun/WSUP",
+          type: "Source",
+          href: "https://github.com/GlitchPanda-varun/Senti-Men",
           icon: <Icons.github className="size-3" />,
         },
       ],
-      image: "/images/rag.png",
+      image: "/images/sentiment.png",
       video: "",
     },
 
@@ -279,16 +288,48 @@ export const DATA = {
       video: "",
     },
     {
+      title: "Campus Connect",
+      href: "#",
+      dates: "2026",
+      active: true,
+      description:
+        "A social media app for students to connect with each other.",
+      technologies: [
+
+        "React Native",
+        "TailwindCSS",
+        "TypeScript",
+      ],
+      links: [
+        {
+          type: "Website",
+          href: "#",
+          icon: <Icons.globe className="size-3" />,
+        },
+        {
+          type: "Source-Private",
+          href: "https://github.com/GlitchPanda-varun/WSUP",
+          icon: <Icons.github className="size-3" />,
+        },
+      ],
+      image: "/images/rag.png",
+      video: "",
+    },
+    {
       title: "Devbhoomi",
       href: "https://devbhoomi-six.vercel.app",
-      dates: "2024",
+      dates: "2026",
       active: true,
       description:
         "A web platform dedicated to discovering the beauty, culture, and hidden gems of Uttarakhand. Explore local destinations, plan trips, and dive into the rich heritage of Dev Bhoomi — the land of the gods.",
       technologies: [
         "Next.js",
-        "React",
-        "TailwindCSS",
+        "NeonDB Serverless PostgreSQL",
+        "Drizzle ORM",
+        "NextAuth (Auth.js v5)",
+        "Tailwind CSS + Shadcn UI",
+        "Nodemailer (via standard SMTP/Gmail)",
+        "React Query + Next Cache",
         "TypeScript",
       ],
       links: [
@@ -299,7 +340,7 @@ export const DATA = {
         },
         {
           type: "Source",
-          href: "https://devbhoomi-six.vercel.app",
+          href: "https://github.com/GlitchPanda-varun/Devbhoomi",
           icon: <Icons.github className="size-3" />,
         },
       ],

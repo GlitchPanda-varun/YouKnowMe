@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useTheme } from "next-themes";
 import { PixelImage } from "@/components/ui/pixel-image";
+import { PixelText } from "@/components/ui/pixel-text";
 
 const NAV_ITEMS = [
   { label: "About", href: "#about" },
@@ -168,12 +169,24 @@ export default function Sidebar() {
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-tight">
               {DATA.name}
             </h1>
-            <span
-              className="font-mono text-sm sm:text-base text-muted-foreground/80"
+            <div
+              className="font-mono text-sm sm:text-base text-muted-foreground/80 relative"
               style={{ color: "#6c63ff" }}
             >
-              @{DATA.gamerTag}
-            </span>
+              {mounted ? (
+                <PixelText
+                  key={`gamertag-${resolvedTheme}`}
+                  text={`@${resolvedTheme === "dark" ? DATA.gamerTag : DATA.gamerTagLight}`}
+                  rows={3}
+                  cols={12}
+                  pixelFadeInDuration={700}
+                  maxAnimationDelay={500}
+                  textClassName="font-mono text-sm sm:text-base"
+                />
+              ) : (
+                <span className="opacity-0">@{DATA.gamerTagLight}</span>
+              )}
+            </div>
           </div>
         </div>
 
